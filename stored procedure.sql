@@ -98,3 +98,36 @@ END $$
 DELIMITER ;
 
 CALL while_proc();
+
+#함수
+DROP FUNCTION IF EXISTS sumFunc;
+DELIMITER $$
+CREATE FUNCTION sumFunc(number1 INT, number2 INT)
+    RETURNS INT
+BEGIN
+    RETURN number1 + number2;
+END $$
+DELIMITER ;
+
+SELECT sumFunc(100, 200) AS '합계';
+
+
+DROP FUNCTION IF EXISTS calcYearFunc;
+DELIMITER $$
+CREATE FUNCTION calcYearFunc(dYear INT)
+    RETURNS INT
+BEGIN
+    DECLARE runYear INT; 
+    SET runYear = YEAR(CURDATE()) - dYear;
+    RETURN runYear;
+END $$
+DELIMITER ;
+
+SELECT calcYearFunc(2010) AS '활동햇수';
+
+SELECT calcYearFunc(2007) INTO @debut2007;
+SELECT calcYearFunc(2013) INTO @debut2013;
+SELECT @debut2007-@debut2013 AS '2007과 2013 차이' ;
+
+SELECT mem_id, mem_name, calcYearFunc(YEAR(debut_date)) AS '활동 햇수' 
+    FROM member; 
